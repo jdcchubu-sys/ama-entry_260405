@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>出場申込フォーム｜2026 中部ダンスフェスティバル in 金沢</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root {
+  --primary: #1a237e;
+  --primary2: #3949ab;
+  --accent: #c9a227;
+  --gold: #c9a227;
+  --success: #2d7a4f;
+  --danger: #c62828;
+  --bg: #f4f6fc;
+  --card-bg: #fff;
+  --text: #1c1c2e;
+  --muted: #6b7a99;
+  --border: #dde3f5;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(26,35,126,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ===== HEADER ===== */
+header{background:linear-gradient(135deg,#0d1b6e 0%,#1a237e 40%,#283593 70%,#3949ab 100%);padding:28px 20px 22px;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(201,162,39,0.18) 0%,transparent 60%)}
+.header-badge{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(201,162,39,0.5);color:#f5e199;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:10px;letter-spacing:1px}
+header h1{color:#fff;font-size:clamp(15px,4vw,22px);font-weight:900;line-height:1.3;letter-spacing:0.5px;margin-bottom:4px;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
+header h2{color:#f5e199;font-size:clamp(13px,3.5vw,18px);font-weight:700;margin-bottom:14px}
+.header-info{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;margin-top:8px}
+.header-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:12px;font-weight:600;padding:5px 13px;border-radius:20px}
+.header-chip i{color:#f5e199}
+
+/* ===== CONTAINER ===== */
+.container{max-width:820px;margin:0 auto;padding:20px 16px 40px}
+
+/* ===== STEP BAR ===== */
+.step-bar{display:flex;justify-content:center;align-items:center;gap:0;margin:18px 0 24px}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px}
+.step-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;background:var(--border);color:var(--muted);transition:.3s}
+.step-label{font-size:11px;color:var(--muted);font-weight:600}
+.step.active .step-circle{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 2px 12px rgba(26,35,126,0.3)}
+.step.active .step-label{color:var(--primary);font-weight:700}
+.step.done .step-circle{background:linear-gradient(135deg,var(--success),#3a9e64);color:#fff}
+.step-line{width:50px;height:2px;background:var(--border);margin:0 4px;margin-bottom:18px}
+
+/* ===== CARD ===== */
+.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px 18px;margin-bottom:16px;border:1px solid var(--border)}
+.card-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:2px solid var(--border)}
+.card-title i{color:var(--gold)}
+
+/* ===== NOTICE ===== */
+.notice{background:linear-gradient(135deg,#fff8e1,#fffde7);border:1px solid #f9d835;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.notice-title{font-size:13px;font-weight:800;color:#7a5c00;display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.notice-body{font-size:12.5px;color:#5a4000;line-height:1.7}
+.notice-body strong{color:#7a5c00}
+
+/* ===== FORM ===== */
+.player-columns{display:flex;gap:16px}
+.player-col{flex:1;min-width:0;background:linear-gradient(135deg,#f8f9ff,#eef1fb);border-radius:12px;padding:16px 14px;border:1px solid #d8ddf5}
+.player-col-title{font-size:13px;font-weight:800;color:#fff;padding:6px 14px;border-radius:8px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.col-leader-title{background:linear-gradient(90deg,#1a237e,#3949ab)}
+.col-partner-title{background:linear-gradient(90deg,#880e4f,#c2185b)}
+
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12.5px;font-weight:700;color:var(--primary);margin-bottom:5px}
+.req{display:inline-block;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:5px;vertical-align:middle}
+.opt{display:inline-block;background:var(--muted);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-right:5px;vertical-align:middle}
+input[type=text],input[type=email],input[type=tel],input[type=date]{
+  width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-size:14px;font-family:inherit;background:#fff;transition:.2s;
+}
+input:focus{outline:none;border-color:var(--primary2);box-shadow:0 0 0 3px rgba(57,73,171,0.12)}
+input.error{border-color:var(--danger)!important}
+.err-msg{display:none;font-size:11px;color:var(--danger);margin-top:3px;font-weight:600}
+.err-msg.show{display:block}
+
+/* ===== ZIP ===== */
+.zip-wrap{display:flex;align-items:center;gap:8px}
+.w-zip-input{max-width:33%}
+.btn-zip{flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border:none;padding:10px 14px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-zip:hover{opacity:.9}
+.btn-zip:disabled{opacity:.6;cursor:default}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+
+/* ===== WIDTH HELPERS ===== */
+.w-reg{max-width:50%}
+.w-mobile{max-width:33%}
+.w-email{max-width:40%}
+.w-addr{max-width:50%}
+.w-contact-name{max-width:50%}
+
+/* ===== SECTION LABEL ===== */
+.section-label{font-size:13px;font-weight:800;color:#fff;padding:7px 14px;border-radius:8px;margin:14px 0 8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.section-label i{color:rgba(255,255,255,0.85)}
+.section-label span{color:rgba(255,255,255,0.82);font-size:11px;font-weight:500}
+.sl-br{background:linear-gradient(90deg,#1a237e,#3949ab)}
+.sl-novice{background:linear-gradient(90deg,#2d7a4f,#3a9e64)}
+.sl-senior{background:linear-gradient(90deg,#5c3200,#8d4e00)}
+.sl-grand{background:linear-gradient(90deg,#4a148c,#7b1fa2)}
+
+/* ===== COL HEAD ===== */
+.col-head{font-size:12px;font-weight:700;padding:5px 10px;margin-bottom:6px;border-radius:6px}
+.col-br{background:linear-gradient(90deg,#c5cae9,#dde1f7);color:#1a237e}
+.col-la{background:linear-gradient(90deg,#ffcdd2,#fde8ea);color:#b71c1c}
+
+/* ===== EVENT GRID ===== */
+.event-col-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.event-grid{display:grid;grid-template-columns:1fr;gap:6px;margin-bottom:6px}
+.event-item{display:flex;align-items:flex-start;gap:10px;background:#f8f9ff;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:.2s;user-select:none}
+.event-item:hover{border-color:var(--primary2);background:#eef1fb}
+.event-item.checked{background:linear-gradient(135deg,#e8eaf6,#f3f0ff);border-color:var(--primary);box-shadow:0 2px 8px rgba(26,35,126,0.12)}
+.event-item input[type=checkbox]{width:18px;height:18px;flex-shrink:0;accent-color:var(--primary);cursor:pointer;margin-top:2px}
+.event-no{font-size:15px;font-weight:900;color:var(--gold)}
+.event-name{font-size:13px;font-weight:700;color:var(--text);margin-top:2px}
+.event-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.event-free{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#2d7a4f,#3a9e64);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:4px}
+
+/* ===== FEE BOX ===== */
+.fee-box{background:linear-gradient(135deg,#1a237e,#3949ab);border-radius:12px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.fee-label{color:rgba(255,255,255,0.85);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.fee-amount{font-size:28px;font-weight:900;color:#f5e199}
+.fee-unit{font-size:14px;color:rgba(255,255,255,0.8);margin-left:4px}
+
+/* ===== TRANSFER CARD ===== */
+.transfer-wrap{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start}
+.transfer-wrap .form-group{flex:0 0 auto;width:calc(50% - 6px)}
+
+/* ===== NOTES ===== */
+.notes-list{list-style:none;padding:0}
+.notes-list li{font-size:12.5px;color:#444;padding:5px 0 5px 18px;border-bottom:1px solid #f0f0f0;position:relative;line-height:1.6}
+.notes-list li::before{content:'・';position:absolute;left:2px;color:var(--gold)}
+
+/* ===== BUTTONS ===== */
+.btn-row{display:flex;justify-content:center;gap:12px;margin-top:20px}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border:none;padding:14px 36px;border-radius:50px;font-size:15px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,35,126,0.25);transition:.2s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,35,126,0.35)}
+.btn-back{background:#fff;color:var(--primary);border:2px solid var(--primary);padding:13px 30px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-back:hover{background:#f0f3ff}
+
+/* ===== CONFIRM VIEW ===== */
+.confirm-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.confirm-table th{width:36%;background:#f0f3fb;font-size:12.5px;font-weight:700;color:var(--primary);padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.confirm-table td{font-size:13px;color:var(--text);padding:9px 12px;border-bottom:1px solid var(--border)}
+.event-tag{display:inline-flex;align-items:center;gap:4px;background:#eef1fb;border:1px solid #c5cae9;border-radius:6px;padding:3px 8px;font-size:12px;font-weight:600;margin:2px;color:var(--primary)}
+.tag-no{color:var(--gold);font-weight:900}
+.total-row td{background:linear-gradient(90deg,#e8eaf6,#f3f0ff);font-size:15px;font-weight:800;color:var(--primary)}
+
+/* ===== COMPLETE VIEW ===== */
+.complete-icon{font-size:56px;color:var(--success);text-align:center;margin-bottom:12px}
+.complete-title{font-size:20px;font-weight:900;color:var(--primary);text-align:center;margin-bottom:8px}
+.complete-msg{font-size:13.5px;color:var(--muted);text-align:center;line-height:1.7;margin-bottom:20px}
+.transfer-box{background:linear-gradient(135deg,#fff8e1,#fffde7);border:1.5px solid #f9d835;border-radius:12px;padding:16px 20px;margin-bottom:16px}
+.transfer-box-title{font-size:13px;font-weight:800;color:#7a5c00;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.transfer-box-body{font-size:13px;color:#5a4000;line-height:1.8}
+.transfer-box-body strong{font-size:17px;color:#7a5c00}
+
+/* ===== UTILS ===== */
+.hidden{display:none!important}
+.text-center{text-align:center}
+.mt8{margin-top:8px}
+.section-note{font-size:11.5px;color:var(--muted);background:#f8f9ff;border-radius:6px;padding:5px 10px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  .player-columns{flex-direction:column;gap:16px}
+  .event-col-wrap{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .card{padding:16px 13px}
+  .header-info{flex-direction:column;gap:5px}
+  .player-columns{flex-direction:column;gap:16px}
+  .event-col-wrap{grid-template-columns:1fr}
+  .w-reg,.w-zip-input,.w-mobile,.w-email,.w-addr,.w-contact-name{max-width:100%!important}
+  .btn-row{flex-direction:column}
+  .form-row{flex-direction:column;gap:0}
+  .zip-wrap{flex-direction:column;align-items:flex-start}
+  .transfer-wrap .form-group{width:100%!important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge"><i class="fas fa-star"></i> JDC公認 №202609</div>
+  <h1>北國新聞社杯争奪</h1>
+  <h2>2026 中部ダンスフェスティバル in 金沢</h2>
+  <div class="header-info">
+    <div class="header-chip"><i class="fas fa-calendar-alt"></i> 令和8年4月5日（日）</div>
+    <div class="header-chip"><i class="fas fa-map-marker-alt"></i> 石川県立音楽堂 B1 交流ホール</div>
+    <div class="header-chip"><i class="fas fa-clock"></i> 申込締切：3月6日（金）必着</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- STEP BAR -->
+  <div class="step-bar">
+    <div class="step active" id="step1">
+      <div class="step-circle"><i class="fas fa-pen"></i></div>
+      <div class="step-label">入力</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step2">
+      <div class="step-circle"><i class="fas fa-check-double"></i></div>
+      <div class="step-label">確認</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step3">
+      <div class="step-circle"><i class="fas fa-flag-checkered"></i></div>
+      <div class="step-label">完了</div>
+    </div>
+  </div>
+
+  <!-- ===== FORM VIEW ===== -->
+  <div id="formView">
+
+    <!-- 申込方法ノーティス -->
+    <div class="notice">
+      <div class="notice-title"><i class="fas fa-info-circle"></i> 申込方法・振込先</div>
+      <div class="notice-body">
+        出場料を郵便振替にてお振込みのうえ、本フォームよりお申込みください。<br>
+        <strong>振替口座：00790-4-93947</strong>（日本ダンス議会中部総局石川県支局）<br>
+        通信欄に「大会日・大会名（2026中部フェス金沢）」を必ずご記入ください。<br>
+        ※申込締切：<strong>令和8年3月6日（金）必着</strong>
+      </div>
+    </div>
+
+    <!-- 選手情報 -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-users"></i> 選手情報</div>
+      <div class="player-columns">
+        <!-- リーダー -->
+        <div class="player-col">
+          <div class="player-col-title col-leader-title"><i class="fas fa-user"></i> リーダー</div>
+          <div class="form-group">
+            <label><span class="opt">任意</span><i class="fas fa-id-card"></i> 登録番号</label>
+            <input type="text" id="regLeader" class="w-reg" placeholder="例：123456" maxlength="6" pattern="\d{6}" inputmode="numeric">
+            <div class="err-msg" id="regLeader-err">半角数字6桁で入力してください</div>
+          </div>
+          <div class="form-group">
+            <label><span class="req">必須</span> 氏名（漢字）</label>
+            <input type="text" id="leaderKanji" placeholder="例：山田 太郎">
+            <div class="err-msg" id="leaderKanji-err">氏名（漢字）を入力してください</div>
+          </div>
+          <div class="form-group">
+            <label><span class="req">必須</span> 氏名（ふりがな）</label>
+            <input type="text" id="leaderKana" placeholder="例：やまだ たろう">
+            <div class="err-msg" id="leaderKana-err">氏名（ふりがな）を入力してください</div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt">任意</span> 所属教室名</label>
+            <input type="text" id="leaderDojo" placeholder="例：○○ダンススクール">
+          </div>
+        </div>
+        <!-- パートナー -->
+        <div class="player-col">
+          <div class="player-col-title col-partner-title"><i class="fas fa-user"></i> パートナー</div>
+          <div class="form-group">
+            <label><span class="opt">任意</span><i class="fas fa-id-card"></i> 登録番号</label>
+            <input type="text" id="regPartner" class="w-reg" placeholder="例：123456" maxlength="6" pattern="\d{6}" inputmode="numeric">
+            <div class="err-msg" id="regPartner-err">半角数字6桁で入力してください</div>
+          </div>
+          <div class="form-group">
+            <label><span class="req">必須</span> 氏名（漢字）</label>
+            <input type="text" id="partnerKanji" placeholder="例：山田 花子">
+            <div class="err-msg" id="partnerKanji-err">氏名（漢字）を入力してください</div>
+          </div>
+          <div class="form-group">
+            <label><span class="req">必須</span> 氏名（ふりがな）</label>
+            <input type="text" id="partnerKana" placeholder="例：やまだ はなこ">
+            <div class="err-msg" id="partnerKana-err">氏名（ふりがな）を入力してください</div>
+          </div>
+          <div class="form-group">
+            <label><span class="opt">任意</span> 所属教室名</label>
+            <input type="text" id="partnerDojo" placeholder="例：○○ダンススクール">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 連絡先 -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-address-card"></i> 連絡先</div>
+      <div class="form-group">
+        <label><span class="req">必須</span> 連絡先氏名</label>
+        <input type="text" id="contactName" class="w-contact-name" placeholder="例：山田 太郎">
+        <div class="err-msg" id="contactName-err">連絡先氏名を入力してください</div>
+      </div>
+      <div class="form-group">
+        <label><span class="req">必須</span> 郵便番号</label>
+        <div class="zip-wrap">
+          <input type="text" id="zip" class="w-zip-input" placeholder="例：1234567" maxlength="8" inputmode="numeric">
+          <button type="button" class="btn-zip" onclick="searchZip()"><i class="fas fa-search"></i> 検索</button>
+        </div>
+        <div class="err-msg" id="zip-err">郵便番号を入力してください</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label><span class="req">必須</span> 都道府県</label>
+          <input type="text" id="pref" placeholder="例：石川県">
+          <div class="err-msg" id="pref-err">都道府県を入力してください</div>
+        </div>
+        <div class="form-group">
+          <label><span class="req">必須</span> 市区町村</label>
+          <input type="text" id="city" placeholder="例：金沢市昭和町">
+          <div class="err-msg" id="city-err">市区町村を入力してください</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label><span class="req">必須</span> 番地・マンション名</label>
+        <input type="text" id="addr" class="w-addr" placeholder="例：1-1-1 ○○マンション101">
+        <div class="err-msg" id="addr-err">番地を入力してください</div>
+      </div>
+      <div class="form-group">
+        <label><span class="req">必須</span> 携帯番号</label>
+        <input type="tel" id="mobile" class="w-mobile" placeholder="例：09012345678" inputmode="numeric">
+        <div class="err-msg" id="mobile-err">携帯番号を入力してください</div>
+      </div>
+      <div class="form-group">
+        <label><span class="req">必須</span> メールアドレス</label>
+        <input type="email" id="email" class="w-email" placeholder="例：example@email.com">
+        <div class="err-msg" id="email-err">正しいメールアドレスを入力してください</div>
+      </div>
+    </div>
+
+    <!-- 出場競技区分 -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-trophy"></i> 出場競技区分（複数選択可）</div>
+
+      <!-- アマチュア -->
+      <div class="section-label sl-br"><i class="fas fa-award"></i> アマチュア <span>JDC登録選手（自己級より下位不可）</span></div>
+      <div class="event-col-wrap">
+        <div>
+          <div class="col-head col-br"><i class="fas fa-shoe-prints"></i> ボールルーム</div>
+          <div id="amaBREvents" class="event-grid"></div>
+        </div>
+        <div>
+          <div class="col-head col-la"><i class="fas fa-fire"></i> ラテンアメリカン</div>
+          <div id="amaLAEvents" class="event-grid"></div>
+        </div>
+      </div>
+
+      <!-- ノービス -->
+      <div class="section-label sl-novice"><i class="fas fa-seedling"></i> ノービス級 <span>D級未満の選手・出場料無料</span></div>
+      <div class="section-note"><i class="fas fa-info-circle"></i> ノービス級は出場料無料です / 平服可 / 使用フィガーはISTD・IDTAテクニックブック範囲内</div>
+      <div class="event-col-wrap">
+        <div>
+          <div class="col-head col-br"><i class="fas fa-shoe-prints"></i> ボールルーム</div>
+          <div id="noviceBREvents" class="event-grid"></div>
+        </div>
+        <div>
+          <div class="col-head col-la"><i class="fas fa-fire"></i> ラテンアメリカン</div>
+          <div id="noviceLAEvents" class="event-grid"></div>
+        </div>
+      </div>
+
+      <!-- ミドルシニア -->
+      <div class="section-label sl-senior"><i class="fas fa-crown"></i> ミドルシニア <span>男女共45歳以上のJDC登録選手（シニア登録不要）</span></div>
+      <div class="event-col-wrap">
+        <div>
+          <div class="col-head col-br"><i class="fas fa-shoe-prints"></i> ボールルーム</div>
+          <div id="seniorBREvents" class="event-grid"></div>
+        </div>
+        <div>
+          <div class="col-head col-la"><i class="fas fa-fire"></i> ラテンアメリカン</div>
+          <div id="seniorLAEvents" class="event-grid"></div>
+        </div>
+      </div>
+
+      <!-- グランドシニアB -->
+      <div class="section-label sl-grand"><i class="fas fa-star"></i> グランドシニアＢ級 <span>男女どちらかが65歳以上のJDC登録選手（シニア登録不要）</span></div>
+      <div class="event-col-wrap">
+        <div>
+          <div class="col-head col-br"><i class="fas fa-shoe-prints"></i> ボールルーム</div>
+          <div id="grandBREvents" class="event-grid"></div>
+        </div>
+        <div>
+          <div class="col-head col-la"><i class="fas fa-fire"></i> ラテンアメリカン</div>
+          <div id="grandLAEvents" class="event-grid"></div>
+        </div>
+      </div>
+
+      <!-- 合計出場料 -->
+      <div class="fee-box">
+        <div class="fee-label"><i class="fas fa-yen-sign"></i> 合計出場料</div>
+        <div><span class="fee-amount" id="totalFee">0</span><span class="fee-unit">円</span></div>
+      </div>
+    </div>
+
+    <!-- 振込情報カード -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-university"></i> 振込情報</div>
+      <div class="transfer-wrap">
+        <div class="form-group" style="flex:0 0 auto;width:calc(50% - 6px)">
+          <label><span class="req">必須</span> <i class="fas fa-calendar-check"></i> 振込日</label>
+          <input type="date" id="transferDate" style="width:100%;padding:13px 12px;font-size:15px;">
+          <div class="err-msg" id="transferDate-err">振込日を入力してください</div>
+        </div>
+        <div class="form-group" style="flex:0 0 auto;width:calc(50% - 6px)">
+          <label><span class="req">必須</span> <i class="fas fa-user-edit"></i> 振込人名</label>
+          <input type="text" id="transferName" placeholder="例：タナカ タロウ" style="width:100%">
+          <div class="err-msg" id="transferName-err">振込人名を入力してください</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 注意事項 -->
+    <div class="card">
+      <div class="card-title"><i class="fas fa-exclamation-triangle"></i> 注意事項</div>
+      <ul class="notes-list">
+        <li>アマ ノービス級の出場料は無料です。</li>
+        <li>各セクションにおいて出場組数によっては中止の場合があります。</li>
+        <li>登録選手の上位挑戦は何れの級に対しても認めます。</li>
+        <li>自己級より下位のクラスには出場できません（シニア競技会もこれに準ずる）。</li>
+        <li>ノービスで昇級した未登録選手は、必ず選手登録の手続きをお願い致します。</li>
+        <li>ミドルシニアA・B級戦、グランドシニアB級戦はJDC登録選手であればシニア登録なしで申込みできます。</li>
+        <li>納入された出場料は原則として返金できません。</li>
+        <li>女性用シューズは必ずヒールカバーを装着してください。</li>
+        <li>ノービス使用フィガーはISTD・IDTA発行のテクニックブック記載の範囲内。</li>
+        <li>出場申込締切：<strong>令和8年3月6日（金）必着</strong></li>
+      </ul>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goConfirm()"><i class="fas fa-arrow-right"></i> 申込内容を確認する</button>
+    </div>
+  </div><!-- /formView -->
+
+  <!-- ===== CONFIRM VIEW ===== -->
+  <div id="confirmView" class="hidden">
+    <div class="card">
+      <div class="card-title"><i class="fas fa-check-double"></i> 申込内容の確認</div>
+      <table class="confirm-table" id="confirmTable"></table>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goBack()"><i class="fas fa-arrow-left"></i> 戻る</button>
+      <button class="btn-primary" id="submitBtn" onclick="submitForm()"><i class="fas fa-paper-plane"></i> 申し込む</button>
+    </div>
+  </div>
+
+  <!-- ===== COMPLETE VIEW ===== -->
+  <div id="completeView" class="hidden">
+    <div class="card text-center">
+      <div class="complete-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="complete-title">お申込みを受け付けました</div>
+      <div class="complete-msg">
+        確認メールをお送りしました。ご確認ください。<br>
+        メールが届かない場合は <strong>jdc.chubu@gmail.com</strong> までご連絡ください。
+      </div>
+      <div class="transfer-box">
+        <div class="transfer-box-title"><i class="fas fa-university"></i> 振込先</div>
+        <div class="transfer-box-body">
+          郵便振替口座：<strong>00790-4-93947</strong><br>
+          加入者名：日本ダンス議会中部総局石川県支局<br>
+          通信欄に「2026.4.5 中部フェス金沢」と必ずご記入ください。<br><br>
+          申込締切：<strong>令和8年3月6日（金）必着</strong>
+        </div>
+      </div>
+      <div class="notice-body mt8">
+        【問い合わせ先】JDC中部総局石川県支局<br>
+        〒920-0348 石川県金沢市松村1-294 竹内ダンススクール内<br>
+        TEL：076-268-3322 FAX：076-268-3548
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+emailjs.init("3A228NVyE5NVMxev8");
+
+const FEE_OPEN   = 6000;
+const FEE_NORMAL = 5000;
+const FEE_NOVICE = 0;
+
+const amaData = {
+  ballroom: [
+    { no:1,  name:'アマ オープン',  detail:'WTFQ ４種目総合', fee:FEE_OPEN },
+    { no:3,  name:'アマ Ｂ級',      detail:'WT ２種目総合',   fee:FEE_NORMAL },
+    { no:5,  name:'アマ Ｃ級',      detail:'W 単科',          fee:FEE_NORMAL },
+    { no:7,  name:'アマ Ｃ級',      detail:'F 単科',          fee:FEE_NORMAL },
+    { no:9,  name:'アマ Ｄ級',      detail:'W 単科',          fee:FEE_NORMAL },
+    { no:11, name:'アマ Ｄ級',      detail:'T 単科',          fee:FEE_NORMAL },
+  ],
+  latin: [
+    { no:2,  name:'アマ オープン',  detail:'CSRP ４種目総合', fee:FEE_OPEN },
+    { no:4,  name:'アマ Ｂ級',      detail:'CS ２種目総合',   fee:FEE_NORMAL },
+    { no:6,  name:'アマ Ｃ級',      detail:'S 単科',          fee:FEE_NORMAL },
+    { no:8,  name:'アマ Ｃ級',      detail:'R 単科',          fee:FEE_NORMAL },
+    { no:10, name:'アマ Ｄ級',      detail:'C 単科',          fee:FEE_NORMAL },
+    { no:12, name:'アマ Ｄ級',      detail:'R 単科',          fee:FEE_NORMAL },
+  ]
+};
+
+// ノービス：BR=13(W),15(T) LA=14(R)
+const noviceData = {
+  ballroom: [
+    { no:13, name:'ノービス級', detail:'W 単科', fee:FEE_NOVICE },
+    { no:15, name:'ノービス級', detail:'T 単科', fee:FEE_NOVICE },
+  ],
+  latin: [
+    { no:14, name:'ノービス級', detail:'R 単科', fee:FEE_NOVICE },
+  ]
+};
+
+// ミドルシニア A・B 級
+const seniorData = {
+  br: [
+    { no:17, name:'ミドルシニアＡ級', detail:'WF ２種目総合', fee:FEE_NORMAL },
+    { no:19, name:'ミドルシニアＢ級', detail:'WT ２種目総合', fee:FEE_NORMAL },
+  ],
+  la: [
+    { no:18, name:'ミドルシニアＡ級', detail:'SR ２種目総合', fee:FEE_NORMAL },
+    { no:20, name:'ミドルシニアＢ級', detail:'CR ２種目総合', fee:FEE_NORMAL },
+  ]
+};
+
+// グランドシニアB（BR・LA両方あり）
+const grandData = {
+  br: [
+    { no:21, name:'グランドシニアＢ級', detail:'W 単科', fee:FEE_NORMAL },
+  ],
+  la: [
+    { no:22, name:'グランドシニアＢ級', detail:'R 単科', fee:FEE_NORMAL },
+  ]
+};
+
+const allEvents = [
+  ...amaData.ballroom, ...amaData.latin,
+  ...noviceData.ballroom, ...noviceData.latin,
+  ...seniorData.br, ...seniorData.la,
+  ...grandData.br, ...grandData.la,
+];
+
+// ===== buildEventItem =====
+function buildEventItem(ev) {
+  const div = document.createElement('div');
+  div.className = 'event-item';
+  div.innerHTML = `
+    <input type="checkbox" id="ev_${ev.no}" data-fee="${ev.fee}">
+    <div style="flex:1">
+      <div><span class="event-no">【No.${String(ev.no).padStart(2,'0')}】</span></div>
+      <div class="event-name">${ev.name}</div>
+      <div class="event-sub">${ev.detail}</div>
+      ${ev.fee === 0 ? '<span class="event-free"><i class="fas fa-gift"></i> 出場料無料</span>' : ''}
+    </div>`;
+  div.addEventListener('click', e => {
+    const cb = div.querySelector('input[type=checkbox]');
+    if (e.target !== cb) cb.checked = !cb.checked;
+    div.classList.toggle('checked', cb.checked);
+    calcFee();
+  });
+  return div;
+}
+
+function buildEvents() {
+  const render = (id, evs) => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    c.innerHTML = '';
+    evs.forEach(ev => c.appendChild(buildEventItem(ev)));
+  };
+  render('amaBREvents',    amaData.ballroom);
+  render('amaLAEvents',    amaData.latin);
+  render('noviceBREvents', noviceData.ballroom);
+  render('noviceLAEvents', noviceData.latin);
+  render('seniorBREvents', seniorData.br);
+  render('seniorLAEvents', seniorData.la);
+  render('grandBREvents',  grandData.br);
+  render('grandLAEvents',  grandData.la);
+}
+
+function calcFee() {
+  let total = 0;
+  document.querySelectorAll('.event-item input[type=checkbox]:checked').forEach(cb => {
+    total += parseInt(cb.dataset.fee || 0);
+  });
+  document.getElementById('totalFee').textContent = total.toLocaleString();
+}
+
+// ===== 登録番号：全角→半角変換 =====
+['regLeader','regPartner'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    this.value = this.value
+      .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+      .replace(/\D/g, '')
+      .slice(0, 6);
+  });
+});
+
+// ===== 郵便番号自動入力 =====
+function searchZip() {
+  const raw = document.getElementById('zip').value
+    .replace(/-/g,'')
+    .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+  if (raw.length !== 7) { alert('郵便番号を7桁で入力してください'); return; }
+  const btn = document.querySelector('.btn-zip');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  const cbName = '_zipCb_' + Date.now();
+  const script = document.createElement('script');
+  window[cbName] = function(data) {
+    delete window[cbName];
+    document.head.removeChild(script);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-search"></i> 検索';
+    if (data.results) {
+      const r = data.results[0];
+      document.getElementById('pref').value = r.address1;
+      document.getElementById('city').value = r.address2 + r.address3;
+    } else {
+      alert('住所が見つかりませんでした。手動で入力してください。');
+    }
+  };
+  script.onerror = function() {
+    delete window[cbName];
+    document.head.removeChild(script);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-search"></i> 検索';
+    alert('住所検索に失敗しました。手動で入力してください。');
+  };
+  script.src = `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${raw}&callback=${cbName}`;
+  document.head.appendChild(script);
+}
+
+// ===== バリデーション =====
+function gv(id) { return document.getElementById(id).value.trim(); }
+function v(id, ok) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(id + '-err');
+  if (el) el.classList.toggle('error', !ok);
+  if (err) err.classList.toggle('show', !ok);
+  return ok;
+}
+
+function goConfirm() {
+  let ok = true;
+  const regL = gv('regLeader');
+  const regP = gv('regPartner');
+  ok = v('regLeader',  regL === '' || /^\d{6}$/.test(regL)) && ok;
+  ok = v('regPartner', regP === '' || /^\d{6}$/.test(regP)) && ok;
+  ok = v('leaderKanji',  gv('leaderKanji') !== '')  && ok;
+  ok = v('leaderKana',   gv('leaderKana') !== '')   && ok;
+  ok = v('partnerKanji', gv('partnerKanji') !== '') && ok;
+  ok = v('partnerKana',  gv('partnerKana') !== '')  && ok;
+  ok = v('contactName',  gv('contactName') !== '')  && ok;
+  ok = v('zip',   gv('zip') !== '')   && ok;
+  ok = v('pref',  gv('pref') !== '')  && ok;
+  ok = v('city',  gv('city') !== '')  && ok;
+  ok = v('addr',  gv('addr') !== '')  && ok;
+  ok = v('mobile', gv('mobile') !== '') && ok;
+  ok = v('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(gv('email'))) && ok;
+  ok = v('transferDate', gv('transferDate') !== '') && ok;
+  ok = v('transferName', gv('transferName') !== '') && ok;
+
+  const sel = allEvents.filter(e => {
+    const cb = document.getElementById('ev_' + e.no);
+    return cb && cb.checked;
+  });
+  if (sel.length === 0) { alert('出場競技区分を1つ以上選択してください。'); ok = false; }
+  if (!ok) { document.querySelector('.error')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+
+  buildConfirm(sel);
+  document.getElementById('formView').classList.add('hidden');
+  document.getElementById('confirmView').classList.remove('hidden');
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildConfirm(sel) {
+  const addrFull = gv('pref') + gv('city') + gv('addr');
+  const regL = gv('regLeader')  || '（未登録）';
+  const regP = gv('regPartner') || '（未登録）';
+  const total = sel.reduce((s, e) => s + e.fee, 0);
+
+  const rows = [
+    ['リーダー登録番号',   regL === '（未登録）' ? regL : `（${regL}）`],
+    ['リーダー氏名',       `${gv('leaderKanji')}（${gv('leaderKana')}）`],
+    ['リーダー所属教室',   gv('leaderDojo') || '（なし）'],
+    ['パートナー登録番号', regP === '（未登録）' ? regP : `（${regP}）`],
+    ['パートナー氏名',     `${gv('partnerKanji')}（${gv('partnerKana')}）`],
+    ['パートナー所属教室', gv('partnerDojo') || '（なし）'],
+    ['連絡先氏名',         gv('contactName')],
+    ['住所',               addrFull],
+    ['携帯番号',           gv('mobile')],
+    ['メールアドレス',     gv('email')],
+    ['振込日',             gv('transferDate')],
+    ['振込人名',           gv('transferName')],
+  ];
+
+  let html = rows.map(([th,td]) =>
+    `<tr><th>${th}</th><td>${td}</td></tr>`
+  ).join('');
+
+  // 出場区分タグ
+  html += `<tr><th>出場競技区分</th><td>`;
+  html += sel.map(e =>
+    `<span class="event-tag"><span class="tag-no">【No.${String(e.no).padStart(2,'0')}】</span> ${e.name} ${e.detail}</span>`
+  ).join('');
+  html += `</td></tr>`;
+  html += `<tr class="total-row"><th>合計出場料</th><td>¥${total.toLocaleString()}</td></tr>`;
+
+  document.getElementById('confirmTable').innerHTML = html;
+
+  // メール本文用に保存
+  window._submitData = { sel, total, addrFull, regL, regP };
+}
+
+function goBack() {
+  document.getElementById('confirmView').classList.add('hidden');
+  document.getElementById('formView').classList.remove('hidden');
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 送信中...';
+
+  const { sel, total, addrFull, regL, regP } = window._submitData;
+  const emailVal = gv('email');
+
+  const eventsLine = sel.map(e =>
+    `【No.${String(e.no).padStart(2,'0')}】${e.name} ${e.detail}：${e.fee === 0 ? '無料' : '¥' + e.fee.toLocaleString()}`
+  ).join('\n');
+
+  const regLDisp = gv('regLeader')  ? `（${gv('regLeader')}）`  : '（未登録）';
+  const regPDisp = gv('regPartner') ? `（${gv('regPartner')}）` : '（未登録）';
+
+  const messageBody =
+    `大会開催日：令和8年4月5日（日）\n` +
+    `リーダー登録番号：${regLDisp}\n` +
+    `パートナー登録番号：${regPDisp}\n` +
+    `リーダー：${gv('leaderKanji')}（${gv('leaderKana')}）\n` +
+    `パートナー：${gv('partnerKanji')}（${gv('partnerKana')}）\n` +
+    `連絡先：${gv('contactName')}　携帯:${gv('mobile')}\n` +
+    `住所：${addrFull}\n` +
+    `メールアドレス：${emailVal}\n` +
+    `\n【出場区分】\n${eventsLine}\n` +
+    `\n合計：¥${total.toLocaleString()}\n` +
+    `振込日：${gv('transferDate')}\n` +
+    `振込人名：${gv('transferName')}`;
+
+  const params = {
+    to_email:  'jdc.chubu@gmail.com',
+    cc_email:  emailVal,
+    reply_to:  emailVal,
+    from_name: gv('leaderKanji') + ' / ' + gv('partnerKanji'),
+    event_name:'【2026 中部ダンスフェスティバル in 金沢】',
+    reg_no:    `リーダー：${regLDisp} / パートナー：${regPDisp}`,
+    leader:    gv('leaderKanji') + '（' + gv('leaderKana') + '）',
+    partner:   gv('partnerKanji') + '（' + gv('partnerKana') + '）',
+    phone:     gv('mobile'),
+    email:     emailVal,
+    address:   addrFull,
+    events:    eventsLine,
+    total_fee: '¥' + total.toLocaleString(),
+    message:   messageBody,
+  };
+
+  try {
+    await emailjs.send('service_guqkzna', 'template_yjehnbv', params);
+    document.getElementById('confirmView').classList.add('hidden');
+    document.getElementById('completeView').classList.remove('hidden');
+    document.getElementById('step2').classList.remove('active');
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('step3').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  } catch(e) {
+    console.error(e);
+    alert('送信に失敗しました。時間をおいて再度お試しいただくか、メールにてご連絡ください。\njdc.chubu@gmail.com');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> 申し込む';
+  }
+}
+
+// 初期化
+buildEvents();
+</script>
+</body>
+</html>
