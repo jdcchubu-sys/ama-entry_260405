@@ -206,7 +206,7 @@ input.err{border-color:var(--accent)!important}
         <div class="player-col">
           <div class="player-col-head leader"><i class="fas fa-user"></i>リーダー</div>
           <div class="form-group">
-            <label>登録番号<span class="opt">任意</span></label>
+            <label>登録番号<span class="req">必須</span></label>
             <input type="text" id="regLeader" class="w-reg" placeholder="例：123456" maxlength="6" pattern="\d{6}" inputmode="numeric">
             <div class="err-msg" id="regLeader-err">半角数字6桁で入力してください</div>
           </div>
@@ -229,7 +229,7 @@ input.err{border-color:var(--accent)!important}
         <div class="player-col">
           <div class="player-col-head partner"><i class="fas fa-user"></i>パートナー</div>
           <div class="form-group">
-            <label>登録番号<span class="opt">任意</span></label>
+            <label>登録番号<span class="req">必須</span></label>
             <input type="text" id="regPartner" class="w-reg" placeholder="例：123456" maxlength="6" pattern="\d{6}" inputmode="numeric">
             <div class="err-msg" id="regPartner-err">半角数字6桁で入力してください</div>
           </div>
@@ -615,8 +615,8 @@ function goConfirm() {
   let ok = true;
   const regL = gv('regLeader');
   const regP = gv('regPartner');
-  ok = v('regLeader',  regL === '' || /^\d{6}$/.test(regL))  && ok;
-  ok = v('regPartner', regP === '' || /^\d{6}$/.test(regP))  && ok;
+  ok = v('regLeader',  /^\d{6}$/.test(regL))  && ok;
+  ok = v('regPartner', /^\d{6}$/.test(regP))  && ok;
   ok = v('leaderKanji',   gv('leaderKanji')   !== '') && ok;
   ok = v('leaderKana',    gv('leaderKana')    !== '') && ok;
   ok = v('partnerKanji',  gv('partnerKanji')  !== '') && ok;
