@@ -378,7 +378,8 @@ input.err{border-color:var(--accent)!important}
         </div>
         <div class="form-group">
           <label><i class="fas fa-yen-sign" style="color:var(--gold)"></i> 振込金額<span class="req">必須</span></label>
-          <input type="text" id="transferAmount" placeholder="例：5000" style="width:100%" inputmode="numeric">
+          <input type="number" id="transferAmount" placeholder="例：5000" min="0" style="width:100%" inputmode="numeric">
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">※ カンマ（,）なしで入力してください</div>
           <div class="err-msg" id="transferAmount-err">振込金額を入力してください</div>
         </div>
       </div>
